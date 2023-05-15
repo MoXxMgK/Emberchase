@@ -7,15 +7,12 @@ using System.Threading.Tasks;
 
 namespace Emberchase.ECS.Base
 {
-    public delegate void DrawLayerChangedDelegate(IDrawComponent drawable, int oldLayer);
 
     public interface IDrawComponent
     {
         bool IsVisible { get; set; }
 
         int DrawLayer { get; set; }
-
-        event DrawLayerChangedDelegate OnDrawLayerChanged;
 
         void Draw(SpriteBatch batch);
     }

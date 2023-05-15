@@ -57,11 +57,16 @@ namespace Emberchase.ECS.Components
             }
             else
             {
-                component = _components.First(c => c is T) as T;
+                component = _components.Find(c => c is T) as T;
                 _cache.Add(typeof(T), component);
             }
 
             return component; 
+        }
+
+        public List<T> GetComponents<T>() where T : Component
+        {
+            return _components.Where(c => c is T).Cast<T>().ToList();
         }
 
         private void UpdateLists()
@@ -93,8 +98,6 @@ namespace Emberchase.ECS.Components
             {
                 foreach (var component in _toAdd)
                 {
-                    component.OnAddToEntity();
-
                     if (component is IUpdateComponent comp)
                     {
                         _updateComponents.Add(comp);
@@ -107,6 +110,10 @@ namespace Emberchase.ECS.Components
 
                     _components.Add(component);
                 }
+
+                // Loop one more time to call OnAddToEntity, after all components is set
+                foreach (var c in _toAdd)
+                    c.OnAddToEntity();
 
                 _toAdd.Clear();
             }

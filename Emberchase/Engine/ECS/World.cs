@@ -26,7 +26,6 @@ namespace Emberchase.ECS
         public readonly EntitiesList Entities;
 
         protected readonly List<IDrawComponent> _drawable = new List<IDrawComponent>();
-        protected Dictionary<int, List<IDrawComponent>> _drawableByLayer = new Dictionary<int, List<IDrawComponent>>();
 
         public World()
         {
@@ -43,7 +42,7 @@ namespace Emberchase.ECS
         public Entity CreateEntity(Vector2 position)
         {
             Entity entity = new Entity();
-            entity.Position = position;
+            entity.Center = position;
             Entities.Add(entity);   
             return entity;
         }
@@ -51,7 +50,7 @@ namespace Emberchase.ECS
         public Entity CreateEntity(Vector2 position, string name)
         {
             Entity entity = new Entity(name);
-            entity.Position = position;
+            entity.Center = position;
             Entities.Add(entity);
             return entity;
         }
@@ -59,29 +58,12 @@ namespace Emberchase.ECS
         public void AddDrawable(IDrawComponent drawable)
         {
             _drawable.Add(drawable);
-            
-            if (!_drawableByLayer.ContainsKey(drawable.DrawLayer))
-                _drawableByLayer.Add(drawable.DrawLayer, new List<IDrawComponent>());
-
-            _drawableByLayer[drawable.DrawLayer].Add(drawable);
-            drawable.OnDrawLayerChanged += OnDrawableLayerChanged;
+            _drawable.Sort();
         }
 
         public void RemoveDrawable(IDrawComponent drawable)
         {
             _drawable.Remove(drawable);
-            _drawableByLayer[drawable.DrawLayer].Remove(drawable);
-            drawable.OnDrawLayerChanged -= OnDrawableLayerChanged;
-        }
-
-        private void OnDrawableLayerChanged(IDrawComponent drawable, int oldLayer)
-        {
-            _drawableByLayer[oldLayer].Remove(drawable);
-
-            if (_drawableByLayer[oldLayer].Count == 0)
-                _drawableByLayer.Remove(oldLayer);
-
-            AddDrawable(drawable);
         }
 
         public void AddEntity(Entity entity)
@@ -102,12 +84,9 @@ namespace Emberchase.ECS
         public virtual void Draw(SpriteBatch batch)
         {
             // May be i should sort dictioary every time i add a new drawable???
-            foreach (var pair in _drawableByLayer.OrderBy(pair => pair.Key))
+            foreach (var d in _drawable)
             {
-                foreach (IDrawComponent drawable in pair.Value)
-                {
-                    drawable.Draw(batch);
-                }
+                d.Draw(batch);
             }
         }
     }

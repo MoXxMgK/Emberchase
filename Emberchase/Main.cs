@@ -2,12 +2,20 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
+using Emberchase.ECS;
+using Emberchase.ECS.Components;
+using Emberchase.Graphics;
+using Emberchase.Components;
+
 namespace Emberchase
 {
     public class Main : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private World _testWorld;
 
         public Main()
         {
@@ -20,7 +28,15 @@ namespace Emberchase
         {
             // TODO: Add your initialization logic here
 
+            _testWorld = new World();
+
             base.Initialize();
+
+            var dummy = _testWorld.CreateEntity(new Vector2(0, 0), "Player");
+            Texture2D tex = Content.Load<Texture2D>("DummyBall");
+            dummy.AddComponent(new SpriteRenderer(tex))
+                .AddComponent(new PlayerMovementComponent())
+                .AddComponent(new KeepInBounds(GraphicsDevice.Viewport.Bounds));
         }
 
         protected override void LoadContent()
@@ -32,10 +48,14 @@ namespace Emberchase
 
         protected override void Update(GameTime gameTime)
         {
+            Time.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            // TODO: Add your update logic 
+
+            _testWorld.Update();
 
             base.Update(gameTime);
         }
@@ -45,6 +65,10 @@ namespace Emberchase
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            _spriteBatch.Begin();
+            _testWorld.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

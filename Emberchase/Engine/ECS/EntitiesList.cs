@@ -48,12 +48,12 @@ namespace Emberchase.ECS
 
         public Entity FindEntityByName(string name)
         {
-            return _entities.First(e => e.Name == name);
+            return _entities.Find(e => e.Name == name);
         }
 
         public Entity FindEntityById(int id)
         {
-            return _entities.First(e => e.Id == id);
+            return _entities.Find(e => e.Id == id);
         }
 
         public T GetEntity<T>() where T : Entity
@@ -66,7 +66,7 @@ namespace Emberchase.ECS
             }
             else
             {
-                entity = _entities.First(e => e is T) as T;
+                entity = _entities.Find(e => e is T) as T;
                 if (entity is not Entity)
                 {
                     _cache.Add(typeof(T), entity);

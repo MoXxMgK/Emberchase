@@ -1,4 +1,5 @@
 ﻿using Emberchase.ECS.Base;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,24 @@ namespace Emberchase.ECS.Components
             {
                 int oldLayer = _drawLayer;
                 _drawLayer = value;
-                OnDrawLayerChanged?.Invoke(this, oldLayer);
             }
         }
 
-        public event DrawLayerChangedDelegate OnDrawLayerChanged;
+        public Color Color = Color.White;
 
-        public virtual void Draw(SpriteBatch batch) { }
+        public Vector2 LocalOffset = Vector2.Zero;
+
+        public abstract float Width { get; }
+        public abstract float Height { get; }
+
+        public virtual Rectangle Bounds => new Rectangle(
+            (int)Owner.Position.X + (int)LocalOffset.X,
+            (int)Owner.Position.Y + (int)LocalOffset.Y,
+            (int)Width, 
+            (int)Height);
+
+        // TODO Add fluent setters
+
+        public abstract void Draw(SpriteBatch batch);
     }
 }

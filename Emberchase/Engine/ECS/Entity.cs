@@ -30,11 +30,11 @@ namespace Emberchase.ECS
         public event Action<bool> IsActiveChanged;
 
         // Dimentions
-        public int Width;
-        public int Height;
+        public float Width;
+        public float Height;
 
-        public float HalfWidth => (float)Width / 2;
-        public float HalfHeight => (float)Height / 2;
+        public float HalfWidth => Width / 2;
+        public float HalfHeight => Height / 2;
 
         public readonly Transform Transform;
         public Vector2 Position
@@ -176,17 +176,6 @@ namespace Emberchase.ECS
 
         #endregion
 
-        public Rectangle HitBox
-        {
-            get => new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-            set
-            {
-                Position = new Vector2(value.X, value.Y);
-                Width = value.Width;
-                Height = value.Height;
-            }
-        }
-
         #region Ctor
         public Entity(string name)
         {
@@ -195,6 +184,7 @@ namespace Emberchase.ECS
             Name = name;
 
             Transform = new Transform();
+            Components = new ComponentsList(this);
         }
 
         public Entity() : this($"Entity_{NextEntityId}") { }
@@ -232,6 +222,11 @@ namespace Emberchase.ECS
         public T GetComponent<T>() where T : Component
         {
             return Components.GetComponent<T>();
+        }
+
+        public List<T> GetComponents<T>() where T : Component
+        {
+            return Components.GetComponents<T>();
         }
 
         public virtual void Update()
