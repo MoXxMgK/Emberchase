@@ -15,6 +15,9 @@ namespace Emberchase.ECS
         private List<Entity> _toAdd = new List<Entity>();
         private List<Entity> _toRemove = new List<Entity>();
 
+        // May be replace with id or something
+        private Dictionary<Type, Entity> _cache = new Dictionary<Type, Entity>();
+
         public EntitiesList(World world)
         {
             _world = world;
@@ -22,12 +25,18 @@ namespace Emberchase.ECS
 
         public void Add(Entity entity)
         {
+            entity.World = _world;
             entity.Initialize();
             _toAdd.Add(entity);
         }
 
         public void Remove(Entity entity)
         {
+            if (_cache.ContainsKey(entity.GetType()))
+            {
+                _cache.Remove(entity.GetType());
+            }
+
             if (_toAdd.Contains(entity))
             {
                 _toAdd.Remove(entity);
@@ -37,9 +46,39 @@ namespace Emberchase.ECS
             _toRemove.Remove(entity);
         }
 
-        public T FindEntity<T>(string name) where T : Entity
+        public Entity FindEntityByName(string name)
         {
-            return _entities.First(e => e is T && e.Name == name) as T;
+            return _entities.First(e => e.Name == name);
+        }
+
+        public Entity FindEntityById(int id)
+        {
+            return _entities.First(e => e.Id == id);
+        }
+
+        public T GetEntity<T>() where T : Entity
+        {
+            T entity;
+
+            if (_cache.ContainsKey(typeof(T)))
+            {
+                entity = (T)_cache[typeof(T)];
+            }
+            else
+            {
+                entity = _entities.First(e => e is T) as T;
+                if (entity is not Entity)
+                {
+                    _cache.Add(typeof(T), entity);
+                }
+            }
+
+            return entity;
+        }
+
+        public List<T> GetAllEntities<T>() where T : Entity
+        {
+            return _entities.Where(e => e is T).Cast<T>().ToList();
         }
 
         private void UpdateLists()
@@ -60,7 +99,6 @@ namespace Emberchase.ECS
             {
                 foreach (Entity entity in _toAdd)
                 {
-                    entity.World = _world;
                     entity.OnAddToWorld();
                     _entities.Add(entity);
                 }

@@ -17,6 +17,8 @@ namespace Emberchase.ECS.Components
         private List<Component> _toAdd = new List<Component>();
         private List<Component> _toRemove = new List<Component>();
 
+        private Dictionary<Type, Component> _cache = new Dictionary<Type, Component>();
+
         public ComponentsList(Entity owner)
         {
             _owner = owner;
@@ -24,12 +26,18 @@ namespace Emberchase.ECS.Components
 
         public void Add(Component component)
         {
+            component.Owner = _owner;
             component.Initialize();
             _toAdd.Add(component);
         }
 
         public void Remove(Component component)
         {
+            if (_cache.ContainsKey(component.GetType()))
+            {
+                _cache.Remove(component.GetType());
+            }
+
             if (_toAdd.Contains(component))
             {
                 _toAdd.Remove(component);
@@ -41,7 +49,19 @@ namespace Emberchase.ECS.Components
 
         public T GetComponent<T>() where T : Component
         {
-            return _components.First(c => c is T) as T;
+            T component;
+
+            if (_cache.ContainsKey(typeof(T)))
+            {
+                component = (T)_cache[typeof(T)];
+            }
+            else
+            {
+                component = _components.First(c => c is T) as T;
+                _cache.Add(typeof(T), component);
+            }
+
+            return component; 
         }
 
         private void UpdateLists()
@@ -73,7 +93,6 @@ namespace Emberchase.ECS.Components
             {
                 foreach (var component in _toAdd)
                 {
-                    component.Owner = _owner;
                     component.OnAddToEntity();
 
                     if (component is IUpdateComponent comp)
