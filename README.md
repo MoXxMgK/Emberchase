@@ -4,7 +4,7 @@
 *Roadmap* **Engine**
 
 - ❌ Complete physics engine
-- ❌ Content loading extention
+- ✔ Content loading extention
 - ❌ World renderers
 - ❌ Device independent input system
 - ❌ World components ???
