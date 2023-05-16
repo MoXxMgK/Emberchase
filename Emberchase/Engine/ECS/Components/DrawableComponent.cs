@@ -1,4 +1,5 @@
 ﻿using Emberchase.ECS.Base;
+using Emberchase.Extentions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -21,15 +22,11 @@ namespace Emberchase.ECS.Components
             }
         }
 
-        private int _drawLayer = World.Renderlayer.Main;
-        public int DrawLayer
+        protected int _drawLayer = 0;
+        public virtual int DrawLayer
         {
             get => _drawLayer;
-            set
-            {
-                int oldLayer = _drawLayer;
-                _drawLayer = value;
-            }
+            set => _drawLayer = value;
         }
 
         public Color Color = Color.White;
@@ -42,11 +39,36 @@ namespace Emberchase.ECS.Components
         public virtual Rectangle Bounds => new Rectangle(
             (int)Owner.Position.X + (int)LocalOffset.X,
             (int)Owner.Position.Y + (int)LocalOffset.Y,
-            (int)Width, 
+            (int)Width,
             (int)Height);
 
         // TODO Add fluent setters
 
+        protected bool _useAsSize = false;
+
+        public DrawableComponent AsSize()
+        {
+            _useAsSize = true;
+
+            return this;
+        }
+
+        public override void OnAddToEntity()
+        {
+            if (_useAsSize)
+            {
+                Owner.Width = Width; 
+                Owner.Height = Height;
+            }
+        }
+
         public abstract void Draw(SpriteBatch batch);
+
+        #region IComparable
+        public int CompareTo(IDrawComponent other)
+        {
+            return this.DrawLayer.CompareTo(other.DrawLayer); ;
+        }
+        #endregion
     }
 }

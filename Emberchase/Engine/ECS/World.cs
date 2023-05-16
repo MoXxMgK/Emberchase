@@ -12,17 +12,6 @@ namespace Emberchase.ECS
 {
     public class World
     {
-        public static class Renderlayer
-        {
-            public const int BG3 = -120;
-            public const int BG2 = -110;
-            public const int BG1 = -100;
-            public const int Floor2 = -40;
-            public const int Floor1 = -30;
-            public const int Walls = -20;
-            public const int Main = 10;
-        }
-
         public readonly EntitiesList Entities;
 
         protected readonly List<IDrawComponent> _drawable = new List<IDrawComponent>();

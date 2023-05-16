@@ -13,5 +13,10 @@ namespace Emberchase.Extentions
         {
             return new Vector2(rectangle.Width * 0.5f, rectangle.Height * 0.5f);
         }
+
+        public static Rectangle GetCopy(this Rectangle rect)
+        {
+            return new Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+        }
     }
 }

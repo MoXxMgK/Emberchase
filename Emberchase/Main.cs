@@ -34,9 +34,14 @@ namespace Emberchase
 
             var dummy = _testWorld.CreateEntity(new Vector2(0, 0), "Player");
             Texture2D tex = Content.Load<Texture2D>("DummyBall");
-            dummy.AddComponent(new SpriteRenderer(tex))
+            dummy.AddComponent(new SpriteRenderer(tex).AsSize())
+                .AddComponent(new SpriteRenderer(new Sprite(tex))
+                {
+                    LocalOffset = new Vector2(32, 32)
+                })
                 .AddComponent(new PlayerMovementComponent())
-                .AddComponent(new KeepInBounds(GraphicsDevice.Viewport.Bounds));
+                .AddComponent(new KeepInBounds(GraphicsDevice.Viewport.Bounds))
+                .AddComponent(new BoxCollider());
         }
 
         protected override void LoadContent()

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Emberchase.ECS.Base
 {
 
-    public interface IDrawComponent
+    public interface IDrawComponent : IComparable<IDrawComponent>
     {
         bool IsVisible { get; set; }
 
