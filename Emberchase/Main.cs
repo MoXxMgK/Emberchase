@@ -7,6 +7,7 @@ using Emberchase.ECS;
 using Emberchase.ECS.Components;
 using Emberchase.Graphics;
 using Emberchase.Components;
+using Emberchase.Assets;
 
 namespace Emberchase
 {

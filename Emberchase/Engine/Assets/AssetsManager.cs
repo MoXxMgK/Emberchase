@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Emberchase.Engine.Assets
+namespace Emberchase.Assets
 {
     public class AssetsManager : ContentManager
     {
