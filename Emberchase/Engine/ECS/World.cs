@@ -31,7 +31,7 @@ namespace Emberchase.ECS
         public Entity CreateEntity(Vector2 position)
         {
             Entity entity = new Entity();
-            entity.Center = position;
+            entity.Position = position;
             Entities.Add(entity);   
             return entity;
         }
@@ -39,10 +39,12 @@ namespace Emberchase.ECS
         public Entity CreateEntity(Vector2 position, string name)
         {
             Entity entity = new Entity(name);
-            entity.Center = position;
+            entity.Position = position;
             Entities.Add(entity);
             return entity;
         }
+
+        public Entity CreateEntity(string name) => CreateEntity(Vector2.Zero, name);
 
         public void AddDrawable(IDrawComponent drawable)
         {

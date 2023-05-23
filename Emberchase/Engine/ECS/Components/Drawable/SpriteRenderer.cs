@@ -79,7 +79,7 @@ namespace Emberchase.ECS.Components
 
         public override void Draw(SpriteBatch batch)
         {
-            batch.Draw(Sprite, Owner.Center + LocalOffset, Sprite.SourceRect, Color, Transform.Rotation, Origin, Transform.Scale, Effects, 1f);
+            batch.Draw(Sprite, Owner.Position + LocalOffset, Sprite.SourceRect, Color, Transform.Rotation, Origin, Transform.Scale, Effects, 1f);
         }
     }
 }

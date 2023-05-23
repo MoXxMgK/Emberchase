@@ -58,7 +58,7 @@ namespace Emberchase.Components
             OldVelocity = new Vector2(Velocity.X, Velocity.Y);
             Velocity = Speed * Direction * Time.DeltaTime;
 
-            Owner.Center += Velocity;
+            Owner.Position += Velocity;
         }
     }
 }

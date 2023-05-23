@@ -44,22 +44,9 @@ namespace Emberchase.ECS.Components
 
         // TODO Add fluent setters
 
-        protected bool _useAsSize = false;
-
-        public DrawableComponent AsSize()
-        {
-            _useAsSize = true;
-
-            return this;
-        }
-
         public override void OnAddToEntity()
         {
-            if (_useAsSize)
-            {
-                Owner.Width = Width; 
-                Owner.Height = Height;
-            }
+            
         }
 
         public abstract void Draw(SpriteBatch batch);
